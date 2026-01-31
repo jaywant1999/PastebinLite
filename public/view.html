@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body>
+    <div
+      class="min-h-screen w-screen flex flex-col justify-center items-center"
+    >
+      <h1 class="text-xl mb-10">Pasted text</h1>
+      <p id="meta"></p>
+      <pre class="min-w-[50%] whitespace-pre-wrap break-all overflow-auto min-h-[500px] m-4 p-5 border border-gray-500 bg-gray-100" id="content"> Loading...</pre>
+    </div>
+
+    <script>
+      const id = location.pathname.split("/").pop();
+      const contentEl = document.getElementById("content");
+      const metaEl = document.getElementById("meta");
+
+      fetch("/api/paste/" + id)
+        .then((r) => (r.ok ? r.json() : Promise.reject()))
+        .then((d) => {
+          contentEl.innerText = d.content;
+
+          let info = [];
+
+          if (d.remaining_views !== null) {
+            info.push(`Remaining views: ${d.remaining_views}`);
+          }
+
+          if (d.time_left !== null) {
+            info.push(`Time left: ${d.time_left} sec`);
+          }
+
+          metaEl.innerText=info.join("  |  ")
+        })
+        .catch(() => {
+          document.body.innerHTML =
+            "<div class='flex min-h-screen w-full'><p class='text-red-500 text-[30px]  text-center h-full w-full m-auto flex items-cenetr justify-center'>*Pasted text is expired*</p></div>";
+        });
+    </script>
+  </body>
+</html>

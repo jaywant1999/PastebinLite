@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>PasteBinLite</title>
+  </head>
+
+  <body>
+    <div class="flex flex-col">
+      <h1 class="w-full text-center m-4 text-[25px] shadow-xl font-bold p-4">
+        PasteBinLite
+      </h1>
+      <div class="w-screen text-center text-xl flex m-5">
+        <div class="min-w-[60%]">
+          <h1>Create Paste Here....</h1>
+
+          <div class="flex items-center justify-center flex-col w-full">
+            <textarea
+              id="text"
+              class="min-h-[300px] w-full m-4 bg-gray-100 border border-gray-400 p-2"
+              placeholder="Enter text here..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div
+          class="flex justify-center gap-[30px] m-5 mt-7 h-[300px] items-center min-w-[30%] flex-col"
+        >
+          <input
+            id="ttl"
+            class="border border-gray-500 h-[35px] w-full m-2 p-2"
+            placeholder="Time limit in (sec.) here..."
+          />
+
+          <input
+            id="views"
+            class="border border-gray-500 h-[35px] w-full m-2 p-2"
+            placeholder="Enter view limit..."
+          />
+        </div>
+      </div>
+
+      <button
+        class="w-[200px] h-[35px] border bg-green-600 text-white font-bold text-xl m-auto rounded hover:bg-green-800"
+        onclick="createPaste()"
+      >
+        SUBMIT
+      </button>
+
+      <div
+        class="flex min-w-[80%] m-auto mt-5 text-center items-center justify-center p-4 border border-gray-700 rounded"
+      >
+        <p class="text-red-500 font-semibold">URL :</p>
+        <p
+          id="result"
+          class="text-center flex items-center justify-center text-blue-400"
+        ></p>
+      </div>
+    </div>
+
+    <script>
+      async function createPaste() {
+        const textValue = document.getElementById("text").value;
+        const ttlValue = document.getElementById("ttl").value;
+        const viewsValue = document.getElementById("views").value;
+
+        if (!textValue.trim()) {
+          alert("Please enter some text");
+          return;
+        }
+
+        const res = await fetch("/api/paste", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: textValue,
+            ttl_seconds: ttlValue ? Number(ttlValue) : null,
+            max_views: viewsValue ? Number(viewsValue) : null,
+          }),
+        });
+
+        const data = await res.json();
+
+        result.innerHTML = res.ok
+          ? `<a href="${data.url}" class="underline flex items-center text-center justify-center">${data.url}</a>`
+          : `<span class="text-red-500">${data.error}</span>`;
+      }
+    </script>
+  </body>
+</html>
