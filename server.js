@@ -109,9 +109,9 @@ app.get("/p/:id", (req, res) =>{
     res.sendFile(path.join(__dirname, "public","view.html"));
 })
 
-const PORT = process.env.PORT;
+const port = process.env.PORT;
 
-app.listen(PORT,()=>{
+app.listen(port,()=>{
     console.log(`server is running on port ${port}.....`)
 })
 
