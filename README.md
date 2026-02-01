@@ -51,7 +51,7 @@ cd PasteBinLite
 npm install
 
 ## setup env
-UPSTASH_REDIS_REST_URL=your_upstash_redis_url
+UPSTASH_REDIS_REST_URL=your_upstash_redis_url  |  
 UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
 
 ## Start the server
